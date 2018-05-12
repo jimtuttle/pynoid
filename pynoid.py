@@ -1,7 +1,7 @@
 from random import randint
 
-DIGIT = ['0','1','2','3','4','5','6','7','8','9']
-XDIGIT = DIGIT + ['b','c','d','f','g','h','j','k','m','n','p','q','r','s','t','v','w','x','z']
+DIGIT = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+XDIGIT = DIGIT + ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z']
 GENTYPES = ['r', 's', 'z']
 DIGTYPES = ['d', 'e']
 SHORT = '.shrt.'
@@ -11,7 +11,9 @@ VERSION = 'pynoid 0.1'
 def mint(template='zek', n=None, scheme=None, naa=None):
     ''' Mint identifiers according to template with a prefix of scheme + naa.
 
-    Template is of form [mask] or [prefix].[mask] where prefix is any URI-safe string and mask is a string of any combination 'e' and 'd', optionally beginning with a mint order indicator ('r'|'s'|'z') and/or ending with a checkdigit ('k'):
+    Template is of form [mask] or [prefix].[mask] where prefix is any URI-safe string and mask is a string of any
+    combination 'e' and 'd', optionally beginning with a mint order indicator ('r'|'s'|'z') and/or ending with a
+    checkdigit ('k'):
     
     Example Templates:
     d      : 0, 1, 2, 3
@@ -22,9 +24,16 @@ def mint(template='zek', n=None, scheme=None, naa=None):
 
     The result is appended to the scheme and naa as follows: scheme + naa + '/' + [id].
 
-    There is no checking to ensure ids are not reminted. Instead, minting can be controlled by supplying a (int) value for 'n'. It is possible to implement ordered or random minting from available ids by manipulnating this number from another program. If no 'n' is given, minting is random from within the namespace. An indicator is added between '/' and [id] to mark these ids as for short term testing only. An override may be added later to accommodate applications which don't mind getting used ids. 
-nn
-    A note about 'r', 's', and 'z': 'z' indicates that a namespace should expand on its first element to accommodate any 'n' value (eg. 'de' becomes 'dde' then 'ddde' as numbers get larger). That expansion can be handled by this method. 'r' and 's' (typically meaning 'random' and 'sequential') are recognized as valid values, but ignored and must be implemented elsewhere.
+    There is no checking to ensure ids are not reminted. Instead, minting can be controlled by supplying a (int) value
+    for 'n'. It is possible to implement ordered or random minting from available ids by manipulnating this number from
+    another program. If no 'n' is given, minting is random from within the namespace. An indicator is added between '/'
+    and [id] to mark these ids as for short term testing only. An override may be added later to accommodate
+    applications which don't mind getting used ids.
+
+    A note about 'r', 's', and 'z': 'z' indicates that a namespace should expand on its first element to accommodate
+    any 'n' value (eg. 'de' becomes 'dde' then 'ddde' as numbers get larger). That expansion can be handled by this
+    method. 'r' and 's' (typically meaning 'random' and 'sequential') are recognized as valid values, but ignored and
+    must be implemented elsewhere.
     '''
 
     if '.' in template:
@@ -59,7 +68,9 @@ nn
 def validate(s):
     '''Checks if the final character is a valid checkdigit for the id. Will fail for ids with no checkdigit.
 
-    This will also attempt to strip scheme strings (eg. 'doi:', 'ark:/') from the beginning of the string. This feature is limited, however, so if you haven't tested with your particular namespace, it's best to pass in ids with that data removed.
+    This will also attempt to strip scheme strings (eg. 'doi:', 'ark:/') from the beginning of the string. This feature
+    is limited, however, so if you haven't tested with your particular namespace, it's best to pass in ids with that
+    data removed.
 
     Returns True on success, ValidationError on failure.
     '''
@@ -86,6 +97,7 @@ def __n2xdig(n, mask):
             continue
         value = n % div
         n = n / div
+        print(value)
         xdig += (XDIGIT[value])
         
     if mask[0] == 'z':
@@ -145,17 +157,22 @@ def __checkdigit(s):
             s = s[4:].lstrip('/')
     except IndexError:
         pass
+
     def ordinal(x):
-        try: return XDIGIT.index(x)
-        except: return 0
+        try:
+            return XDIGIT.index(x)
+        except:
+            return 0
     return XDIGIT[sum([x * (i+1) for i, x in enumerate(map(ordinal,s))]) % len(XDIGIT)]
 
 
 class InvalidTemplateError(Exception):
     pass
 
+
 class ValidationError(Exception):
     pass
+
 
 class NamespaceError(Exception):
     pass

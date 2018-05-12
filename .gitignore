@@ -1,0 +1,7 @@
+__pycache__
+.git
+python3-venv
+build
+dist
+pynoid.egg-info
+pynoid.pyc
